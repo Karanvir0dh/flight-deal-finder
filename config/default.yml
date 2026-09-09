@@ -1,0 +1,147 @@
+profile:
+  name: "Hamza"
+  timezone: "America/Toronto"
+  currency: "CAD"
+
+search:
+  origins:
+    primary: [YYZ, YTZ, YHM]
+    optional: [BUF, YKF]
+    available_optional: [BUF, YKF, YOW, DTW, YUL]
+  worldwide: true
+  earliest_departure_days: 7
+  latest_departure_days: 365
+  trip_lengths:
+    - [2, 4]
+    - [4, 6]
+    - [6, 9]
+    - [9, 14]
+    - [14, 21]
+    - [21, 30]
+  trip_types: [one_way, round_trip]
+  excluded_months: []
+  preferred_months: []
+  blackout_dates: []
+  adults: 1
+  cabin: economy
+  maximum_stops: 2
+  carry_on_preferred: true
+  personal_item_only_allowed: true
+  self_transfer_policy: label
+  separate_ticket_policy: label
+  mixed_airport_policy: label
+  regional_searches_per_run: 6
+  destination_catalogue:
+    europe: [DUB, LIS, LHR, LGW, CDG, ORY, AMS, MAD, BCN, FCO, MXP, FRA, BER, MUC, CPH, OSL, ARN, KEF, ZRH, VIE, ATH, WAW, PRG, BUD, IST]
+    south_america: [BOG, MDE, LIM, UIO, GYE, SCL, EZE, AEP, GRU, GIG, CNF, MVD, ASU]
+    middle_east_africa: [DXB, AUH, DOH, TLV, AMM, CAI, CMN, RAK, JNB, CPT, NBO, ADD]
+    asia: [NRT, HND, ICN, TPE, HKG, SIN, BKK, KUL, MNL, SGN, HAN, DEL, BOM, BLR]
+    oceania: [SYD, MEL, BNE, AKL, NAN]
+
+regions:
+  included:
+    - canada_nearby_us
+    - united_states
+    - mexico_caribbean_central_america
+    - south_america
+    - europe
+    - middle_east_africa
+    - asia
+    - oceania
+  excluded_destinations: []
+
+thresholds:
+  one_way:
+    canada_nearby_us: 100
+    united_states: 150
+    mexico_caribbean_central_america: 225
+    europe: 250
+    south_america: 350
+    middle_east_africa: 450
+    asia: 500
+    oceania: 650
+  round_trip:
+    canada_nearby_us: 200
+    united_states: 300
+    mexico_caribbean_central_america: 425
+    europe: 500
+    south_america: 650
+    middle_east_africa: 850
+    asia: 950
+    oceania: 1200
+  percent_below_median:
+    noteworthy: 30
+    strong: 40
+    exceptional: 50
+  new_low:
+    thirty_day_percent: 10
+    all_time_percent: 15
+
+scoring:
+  weights:
+    absolute_affordability: 25
+    median_discount: 25
+    historical_rarity: 15
+    itinerary_quality: 15
+    booking_confidence: 10
+    price_drop_momentum: 10
+  penalties:
+    self_transfer: 8
+    airport_change: 6
+    separate_tickets: 8
+    extremely_long_layover: 7
+    more_than_one_stop: 5
+    very_long_duration: 6
+    basic_economy: 4
+    missing_baggage: 3
+    short_connection: 6
+    overnight: 5
+    stale_result: 8
+    provider_disagreement: 5
+    unverified: 8
+
+notifications:
+  preferred_providers: [email, telegram]
+  immediate_minimum_level: GREAT
+  digest_enabled: true
+  digest_time: "08:00"
+  alert_email: "REPLACE_WITH_MY_EMAIL"
+  duplicate_cooldown_hours: 48
+  resend_price_drop_percent: 10
+  resend_price_drop_cad: 40
+  fare_disappeared_alerts: false
+  operational_empty_digest: false
+
+providers:
+  mock:
+    enabled: true
+    monthly_quota: 100000
+    per_run_budget: 100
+    reserve_for_verification: 10
+  serpapi:
+    enabled: true
+    monthly_quota: 250
+    per_run_budget: 20
+    reserve_for_verification: 5
+  amadeus:
+    enabled: true
+    monthly_quota: 2000
+    per_run_budget: 80
+    reserve_for_verification: 10
+
+currency:
+  provider: exchangerate_host
+  cache_ttl_hours: 12
+  stale_after_hours: 36
+
+retention:
+  raw_response_days: 7
+  observation_days: 730
+
+schedule:
+  search_cron: "0 */6 * * *"
+  digest_timezone: "America/Toronto"
+
+logging:
+  level: INFO
+  json: true

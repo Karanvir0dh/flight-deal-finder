@@ -1,0 +1,35 @@
+profile:
+  name: "Hamza"
+  timezone: "America/Toronto"
+  currency: "CAD"
+
+search:
+  origins:
+    primary:
+      - YYZ
+      - YTZ
+      - YHM
+    optional:
+      - BUF
+      - YKF
+  worldwide: true
+  earliest_departure_days: 7
+  latest_departure_days: 365
+  trip_lengths:
+    - [2, 4]
+    - [4, 6]
+    - [6, 9]
+    - [9, 14]
+    - [14, 21]
+  trip_types:
+    - one_way
+    - round_trip
+  adults: 1
+  cabin: economy
+  maximum_stops: 2
+
+notifications:
+  immediate_minimum_level: "GREAT"
+  digest_enabled: true
+  digest_time: "08:00"
+  alert_email: "REPLACE_WITH_MY_EMAIL"

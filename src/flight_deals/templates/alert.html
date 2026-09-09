@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <body style="font-family:Arial,sans-serif;line-height:1.5;color:#17202a">
+    <h1>{{ candidate.level.value }}: CAD {{ "%.0f"|format(candidate.offer.price_cad) }}</h1>
+    <p><strong>{{ candidate.offer.origin }} to {{ candidate.offer.destination }}</strong> -
+      {{ candidate.offer.trip_type.value.replace("_", " ") }}</p>
+    <p>{{ candidate.explanation }}</p>
+    <ul>
+      <li>Dates: {{ candidate.offer.departure_date }}{% if candidate.offer.return_date %} to {{ candidate.offer.return_date }}{% endif %}</li>
+      <li>Airlines: {{ candidate.offer.carriers|join(", ") or "Unknown" }}</li>
+      <li>Stops: {{ candidate.offer.stops }}</li>
+      <li>Baggage: {{ candidate.offer.baggage or "Not specified" }}</li>
+      <li>Booking confidence: {{ candidate.booking_confidence_level.value }} ({{ candidate.booking_confidence_score }}/100)</li>
+      <li>Verification: {{ candidate.verification.status if candidate.verification else "Unverified" }}</li>
+    </ul>
+    {% if candidate.offer.booking_link %}
+    <p><a href="{{ candidate.offer.booking_link }}">Open booking link</a></p>
+    {% endif %}
+    <p>Verify the final fare, baggage rules, visa requirements, and conditions before purchasing.</p>
+  </body>
+</html>

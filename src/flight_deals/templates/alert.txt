@@ -1,0 +1,16 @@
+{{ candidate.level.value }} flight deal
+
+{{ candidate.explanation }}
+
+Route: {{ candidate.offer.origin }} to {{ candidate.offer.destination }}
+Price: CAD {{ "%.0f"|format(candidate.offer.price_cad) }}
+Dates: {{ candidate.offer.departure_date }}{% if candidate.offer.return_date %} to {{ candidate.offer.return_date }}{% endif %}
+Trip type: {{ candidate.offer.trip_type.value.replace("_", " ") }}
+Airlines: {{ candidate.offer.carriers|join(", ") or "Unknown" }}
+Stops: {{ candidate.offer.stops }}
+Baggage: {{ candidate.offer.baggage or "Not specified" }}
+Booking confidence: {{ candidate.booking_confidence_level.value }} ({{ candidate.booking_confidence_score }}/100)
+Verification: {{ candidate.verification.status if candidate.verification else "Unverified" }}
+Booking link: {{ candidate.offer.booking_link or "No provider booking link returned" }}
+
+Verify the final fare, baggage rules, visa requirements, and conditions before purchasing.

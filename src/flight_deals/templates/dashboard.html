@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flight Deals</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8fa;
+        --panel: #ffffff;
+        --text: #17202a;
+        --muted: #667085;
+        --line: #d9dee7;
+        --accent: #0b6bcb;
+        --good: #0f7b4f;
+        --hot: #b54708;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+        padding: 18px 24px;
+      }
+
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .subtle {
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      .toolbar {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .filter-form {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .checkbox-label {
+        align-items: center;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        display: inline-flex;
+        gap: 8px;
+        padding: 8px 10px;
+      }
+
+      .filter-button {
+        background: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        color: #ffffff;
+        cursor: pointer;
+        padding: 8px 12px;
+      }
+
+      .sort-link {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: var(--text);
+        padding: 8px 10px;
+        text-decoration: none;
+      }
+
+      .sort-link.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--panel);
+        border: 1px solid var(--line);
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--muted);
+        background: #fbfcfe;
+      }
+
+      .price {
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .level {
+        display: inline-block;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 3px 8px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .level-hot {
+        color: var(--hot);
+        border-color: #f7b27a;
+        background: #fff4ed;
+      }
+
+      .level-good {
+        color: var(--good);
+        border-color: #75e0a7;
+        background: #edfcf2;
+      }
+
+      .empty {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 28px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        margin: 28px 0 12px;
+      }
+
+      .search-summary {
+        color: var(--muted);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Flight Deals</h1>
+      <div class="subtle">Local dashboard. Run searches from the CLI, then refresh this page.</div>
+    </header>
+    <main>
+      <h2 class="section-title">Deals</h2>
+      <form class="filter-form" method="get" action="/">
+        <input type="hidden" name="sort" value="{{ sort }}">
+        <input type="hidden" name="direction" value="{{ direction }}">
+        <label class="checkbox-label">
+          <input type="checkbox" name="outside_na" value="true" {% if outside_na %}checked{% endif %}>
+          Outside North America only
+        </label>
+        <button class="filter-button" type="submit">Apply</button>
+      </form>
+      <div class="toolbar">
+        <span class="subtle">Sort by</span>
+        <a class="sort-link {% if sort == 'score' %}active{% endif %}" href="/?sort=score&direction=desc{% if outside_na %}&outside_na=true{% endif %}">Score</a>
+        <a class="sort-link {% if sort == 'price' %}active{% endif %}" href="/?sort=price&direction=asc{% if outside_na %}&outside_na=true{% endif %}">Lowest price</a>
+        <a class="sort-link {% if sort == 'newest' %}active{% endif %}" href="/?sort=newest&direction=desc{% if outside_na %}&outside_na=true{% endif %}">Newest</a>
+        <a class="sort-link {% if sort == 'departure' %}active{% endif %}" href="/?sort=departure&direction=asc{% if outside_na %}&outside_na=true{% endif %}">Departure</a>
+        <a class="sort-link {% if sort == 'level' %}active{% endif %}" href="/?sort=level&direction=desc{% if outside_na %}&outside_na=true{% endif %}">Level</a>
+      </div>
+      {% if deals %}
+      <table>
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Dates</th>
+            <th>Price</th>
+            <th>Level</th>
+            <th>Score</th>
+            <th>Provider</th>
+            <th>Region</th>
+            <th>Why It Triggered</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for deal in deals %}
+          <tr>
+            <td><strong>{{ deal.origin }} to {{ deal.destination }}</strong><br>{{ deal.trip_type.replace("_", " ") }}</td>
+            <td>{{ deal.departure_date }}{% if deal.return_date %}<br>{{ deal.return_date }}{% endif %}</td>
+            <td class="price">CAD {{ "%.0f"|format(deal.price_cad) }}</td>
+            <td>
+              <span class="level {% if deal.level in ['EXCEPTIONAL', 'POSSIBLE MISTAKE FARE'] %}level-hot{% else %}level-good{% endif %}">
+                {{ deal.level }}
+              </span>
+            </td>
+            <td>{{ deal.score }}/100</td>
+            <td>{{ deal.provider }}</td>
+            <td>{{ deal.region.replace("_", " ") }}</td>
+            <td>{{ deal.explanation }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty">
+        No deals stored yet. Run <code>flight-deals run-once --mock --verbose --dry-run</code>, then refresh.
+      </div>
+      {% endif %}
+
+      <h2 class="section-title">Recent Searches</h2>
+      {% if search_runs %}
+      <table>
+        <thead>
+          <tr>
+            <th>Started</th>
+            <th>Finished</th>
+            <th>Status</th>
+            <th>Search</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for search_run in search_runs %}
+          <tr>
+            <td>{{ search_run.started_at }}</td>
+            <td>{{ search_run.finished_at or "" }}</td>
+            <td>{{ search_run.status }}</td>
+            <td class="search-summary">{{ search_run.summary }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty">No searches recorded yet.</div>
+      {% endif %}
+    </main>
+  </body>
+</html>
