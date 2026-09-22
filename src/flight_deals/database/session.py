@@ -11,7 +11,10 @@ from flight_deals.database.models import Base
 
 
 def database_url() -> str:
-    return os.getenv("DATABASE_URL", "sqlite:///./flight_deals.db")
+    configured_url = os.getenv("DATABASE_URL")
+    if configured_url and configured_url.strip():
+        return configured_url.strip()
+    return "sqlite:///./flight_deals.db"
 
 
 def make_engine(url: str | None = None) -> Engine:
